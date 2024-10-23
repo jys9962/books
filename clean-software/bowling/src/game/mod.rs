@@ -1,5 +1,5 @@
-use crate::game::scorer::Scorer;
 use std::cmp::min;
+use crate::game::scorer::Scorer;
 
 pub mod scorer;
 
