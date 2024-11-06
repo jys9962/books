@@ -1,28 +1,131 @@
-# five-lines
+### 규칙. 다섯줄 제한
 
-In this kata your task is to refactor the code for a small game. When finished it should be easy to add new tile types, or make the key draw as a circle, so we can easily distinguish it from the lock. 
 
-The code already abides by the most common principles "Don't Repeat Yourself", "Keep It Simple, Stupid", and there are only very few magic literals. There are no poorly structured nor deeply nested `if`s.
 
-This is *not* an easy exercise.
 
-# About the Game
-In the game, you are a red square and have to get the box (brown) to the lower right corner. Obstacles include falling stones (blue), walls (gray), and a lock (yellow, right) that can be unlocked with the key (yellow, left). You can push one stone or box at a time, and only if it is not falling. The flux (greenish) holds up boxes and stones but can be 'eaten' by the player. 
+: 메서드는 {와 } 제외하고 5줄 이상이 되어서는 안된다
 
-![Screenshot of the game](game.png)
+### 규칙. 호출 또는 전달, 한 가지만 할 것
 
-# How to Build It
-Assuming that you have the Typescript compiler installed: Open a terminal in this directory, then run `tsc`. There should now be a `index.js` file in this directory.
 
-# How to Run It
-To run the game you need to first build it, see above. Then simply open `index.html` in a browser. Use the arrows to move the player.
 
-# Thank You!
-If you like this kata please consider giving the repo a star. You might also consider purchasing a copy of my book where I show a simple way to tackle code like this: [Five Lines of Code](https://www.manning.com/books/five-lines-of-code), available through the Manning Early Access Program.
+:  함수 내에서는 객체에 있는 메서드를 호출하거나 객체를 인자로 전달할 수 있지만 둘을 섞어 사용해서는 안된다.
 
-[![Five Lines of Code](frontpage.png)](https://www.manning.com/books/five-lines-of-code)
+: ‘함수의 내용은 동일한 추상화 수준에 있어야 한다’ 스멜을 찾는 방법
 
-If you have feedback or comments on this repo don't hesitate to write me a message or send me a pull request. 
+### 규칙. if 문은 함수의 시작에만 배치
 
-Thank you for checking it out.
 
+
+: if 문이 있는 경우 해당 if 문은 함수의 첫 번째 항목이어야 한다.
+
+### 규칙. if 문에서 else 를 사용하지 말 것
+
+
+
+: 프로그램에서 이해하지 못하는 타입인지를 검사하지 않는 한 if 문에서 else를 사용하지 않는다.
+
+### 규칙. switch를 사용하지 말 것
+
+
+
+: default 케이스가 없고 모든 케이스에 반환값이 있는 경우가 아니라면 switch 를 사용하지 않는다.
+
+### 규칙. 인터페이스에서만 상속받을 것
+
+
+
+: 상속은 인터페이스를 통해서만 받는다. 추상 클래스는 사용하지 않는다.
+
+: 추상 클래스의 구현은 커플링을 유발한다.
+
+: 추상 클래스의 기본 메서드는 명시적인 처리가 필요 없으므로 실수를 유발한다.
+
+### 규칙. 순수 조건 사용
+
+
+
+: 조건은 항상 순수 조건이어야 한다.
+
+  if/for/while에 오는 조건은 입출력 등의 사이드이펙트가 없이 순수해야 한다. 
+
+### 규칙. 구현체가 하나뿐인 인터페이스는 만들지 말 것
+
+
+
+: 가독성에 방해되므로 만들지 않는다.
+
+### 규칙. 공통 접사를 사용하지 말 것
+
+
+
+: 공통 접두사나 접미사가 있는 메서드나 변수가 없어야 한다.
+
+### 리팩토링. 메서드 추출
+
+
+
+: 주석을 메서드명으로 사용하자
+
+### 리팩토링. 클래스로 타입 코드 대체 (enum→interface)
+
+
+: 값들은 클래스가 되고, 값이 객체가 된다. 그러면 if 문을 각 클래스의 메서드로 옮길 수 있다.
+
+
+
+: ‘클래스로의 코드 이관’ 리팩토링과 같이 쓰인다
+
+- 절차
+    1. 임시 이름을 가진 interface를 도입, interface는 enum 각 값의 is_ 메서드가 있어야 함
+    2. enum의 각 값에 해당하는 class를 생성
+    3. 기존 enum의 이름을 다른 이름으로 변경 (__MyEnum) → 오류발생
+    4. 사용하는 곳의 타입을 interface로 바꾸고 enum 의 == 검사를 is_ 메서드로 바꿈
+    5. enum 값을 할당하는 부분에서 class 생성으로 바꿈
+    6. interface 이름을 기존 enum 이름으로 바꿈
+    
+    * is_ 메서드는 임시적인 것으로 추후 삭제할 수 있도록 해야함
+    
+
+
+### 리팩토링. 클래스로의 코드 이관
+
+
+
+
+: ‘클래스로 타입 코드 대체’ 리팩토링의 연장선
+
+- 절차
+    1. 원래 함수를 복사하여 모든 클래스에 붙여 넣는다.
+    2. 각 클래스에 맞게 조건문의 함수들을 true/false 값으로 대체한다.
+    3. 미리 계산 가능한 값들을 수행한다. if(true) 제거 등.
+    4. 기존 함수 호출을 메서드 호출로 바꾼다
+        
+        
+    
+
+### 리팩토링. 메서드 전문화
+
+
+
+: 너무 일반적인 메서드는 해당 매개변수에 더 전문적인 메서드로 바꾼다.
+
+- 절차
+    1. 대상 메서드를 복제한다.
+    2. 복제된 메서드의 매개변수를 제거하고, 함수의 내용을 기존 매개변수에 맞게 수정한다.
+    3. 기존 메서드 호출하는 것을 새로운 함수 호출로 변경한다.
+
+### 리팩토링. 유사 클래스 통합
+
+
+
+: 상수 메서드를 공통으로 가진 두 개 이상의 클래스에서 해당 메서드가 클래스에 따라 다른값을 반환할 때마다 이   리팩터링 패턴을 사용해 클래스를 통합한다.
+
+
+
+
+- 절차
+    1. 각 클래스의 모든 비기준 메서드를 if(true) {} 형식으로 만든다
+    2. true 대신 기준 메서드(상수 메서드)를 호출하는 것으로 바꾼다
+    3. 각 버전의 본문을 else와 함께 하나의 클래스에 통합한다
+    4. 상수 메서드를 위한 필드를 만들고 생성자 파라미터로 받는다.
